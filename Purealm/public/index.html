@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Purealm</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <style>
+    body {
+      background-color: #ccc;
+      margin: 0;
+      color: #0a0a1a;
+      font-family: sans-serif;
+    }
+    .layout {
+      display: flex;
+    }
+    nav {
+      width: 180px;
+      background-color: #aaa;
+      padding: 1rem;
+      height: 100vh;
+      position: fixed;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    nav ul li a {
+      display: block;
+      padding: 0.5rem;
+      background-color: #888;
+      border-radius: 8px;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+    }
+    nav ul li a:hover {
+      background-color: #777;
+    }
+    .site-header {
+      background-color: #7851a9;
+      color: #0a0a1a;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 1rem auto;
+      margin-left: 220px;
+    }
+    .site-header h1 {
+      font-family: sans-serif;
+    }
+    .site-header p {
+      font-style: italic;
+    }
+    .dandy-header {
+      background-color: lightgreen;
+      color: darkgreen;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 1rem auto;
+      margin-left: 220px;
+    }
+    .rainbow-text span {
+      font-weight: bold;
+      font-family: sans-serif;
+    }
+    main {
+      margin-left: 200px;
+      padding: 2rem;
+      width: calc(100% - 200px);
+    }
+    .post, .activity-post {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: #000000;
+      color: #0a0a1a;
+    }
+    .timestamp {
+      font-size: 0.8rem;
+      color: #0a0a1a;
+    }
+    .comment {
+      border: 1px solid #bbb;
+      padding: 0.5rem;
+      background-color: #f0f0f0;
+      margin-bottom: 0.5rem;
+      color: #0a0a1a;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('main > section').forEach(sec => sec.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    const header = document.getElementById('mainHeader');
+    if (id === 'dandy') {
+      header.className = 'dandy-header';
+      header.innerHTML = `<h1 class="rainbow-text">${'Dandy\'s World'.split('').map((c, i) => `<span style='color:${['red','blue','orange','purple','green','yellow'][i%6]}'>${c}</span>`).join('')}</h1><p style="font-family: serif;">Welcome to the Gardenview Educational Center!</p>`;
+    } else {
+      header.className = 'site-header';
+      header.innerHTML = '<h1>Purealm</h1><p>I think therefore I exist</p>';
+    }
+  }
+function checkAdminPassword() {
+  const input = document.getElementById('adminPassword').value;
+  if (input === 'vivalasvegan') {
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+  } else {
+    alert('Incorrect password.');
+  }
+}
+</script>
+
+<div class="layout">
+  <nav>
+    <ul>
+      <li><a href="#" onclick="showPage('home')">Front Page</a></li>
+      <li><a href="#" onclick="showPage('write')">Admin Panel</a></li>
+      <li><a href="#" onclick="showPage('comments')">Comment Page</a></li>
+      <li><a href="#" onclick="showPage('activity')">Activity Page</a></li>
+      <li><a href="#" onclick="showPage('dandy')">Dandy's World</a></li>
+    </ul>
+  </nav>
+
+  <div style="flex: 1;">
+    <div id="mainHeader" class="site-header">
+      <h1>Purealm</h1>
+      <p>I think therefore I exist</p>
+    </div>
+
+    <main>
+      <section id="home">
+        <h2>ANNOUNCEMENT</h2>
+        <div id="posts"></div>
+      </section>
+
+      <section id="write" style="display:none;">
+  <div id="adminLogin">
+    <h2>Admin Panel Access</h2>
+    <label for="adminPassword">Enter password:</label>
+    <input type="password" id="adminPassword" placeholder="Password">
+    <button onclick="checkAdminPassword()">OK</button>
+  </div>
+  <div id="adminPanel" style="display:none;">
+    <h2>Admin Panel</h2>
+    <form onsubmit="createPost(event)">
+      <textarea id="postContent" placeholder="Write your thoughts..." required></textarea><br>
+      <button type="submit">Post</button>
+    </form>
+  </div>
+</section>
+
+      <section id="comments" style="display:none;">
+        <h2>Comment Page</h2>
+        <form onsubmit="addComment(event)">
+          <input type="text" id="commentUsername" placeholder="Username" required>
+          <input type="text" id="commentInput" placeholder="Leave a comment..." required>
+          <button type="submit">Submit</button>
+        </form>
+        <div id="commentList"></div>
+      </section>
+
+      <section id="activity" style="display:none;">
+        <h2>Activity Page</h2>
+        <form onsubmit="addActivity(event)">
+          <input type="text" id="activityUsername" placeholder="Username" required>
+          <textarea id="activityContent" placeholder="Write your activity..." required></textarea>
+          <input type="file" id="activityImageFile" accept="image/*">
+          <button type="submit">Post</button>
+        </form>
+        <div id="activityList"></div>
+      </section>
+
+      <section id="dandy" style="display:none;">
+        <h2>Dandy's World</h2>
+        <form onsubmit="addDandy(event)">
+          <input type="text" id="dandyUsername" placeholder="Username" required>
+          <textarea id="dandyContent" placeholder="Share something..." required></textarea>
+          <input type="file" id="dandyImageFile" accept="image/*">
+          <button type="submit">Post</button>
+        </form>
+        <div id="dandyList"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+function createPost(e) {
+  e.preventDefault();
+  const content = document.getElementById('postContent').value;
+  const timestamp = new Date().toLocaleString();
+  const post = { content, timestamp };
+  const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+  posts.unshift(post);
+  localStorage.setItem('posts', JSON.stringify(posts));
+  document.getElementById('postContent').value = '';
+  renderPosts();
+  showPage('home');
+}
+function renderPosts() {
+  const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+  document.getElementById('posts').innerHTML = posts.map(p => `
+    <div class="post">
+      <p>${p.content}</p>
+      <p class="timestamp">Posted on ${p.timestamp}</p>
+    </div>
+  `).join('');
+}
+function addComment(e) {
+  e.preventDefault();
+  const usernameInput = document.getElementById('commentUsername');
+  const commentInput = document.getElementById('commentInput');
+  const username = usernameInput.value.trim();
+  const comment = commentInput.value.trim();
+  if (!comment) return;
+  const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+  comments.unshift({ username, comment });
+  localStorage.setItem('comments', JSON.stringify(comments));
+  usernameInput.value = '';
+  commentInput.value = '';
+  renderComments();
+}
+function renderComments() {
+  const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+  document.getElementById('commentList').innerHTML = comments.map(c => `<div class="comment"><strong>${c.username}</strong>: ${c.comment}</div>`).join('');
+}
+function addActivity(event) {
+  event.preventDefault();
+  const username = document.getElementById('activityUsername').value.trim();
+  const content = document.getElementById('activityContent').value.trim();
+  const file = document.getElementById('activityImageFile').files[0];
+  const timestamp = new Date().toLocaleString();
+  if (!username || !content) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const activity = JSON.parse(localStorage.getItem('activity') || '[]');
+    activity.unshift({ username, content, image: reader.result || '', timestamp });
+    localStorage.setItem('activity', JSON.stringify(activity));
+    document.getElementById('activityUsername').value = '';
+    document.getElementById('activityContent').value = '';
+    document.getElementById('activityImageFile').value = '';
+    renderActivity();
+  };
+  if (file) reader.readAsDataURL(file);
+  else reader.onload();
+}
+function renderActivity() {
+  const activity = JSON.parse(localStorage.getItem('activity') || '[]');
+  document.getElementById('activityList').innerHTML = activity.map(a => `
+    <div class="activity-post">
+      <p><strong>${a.username}</strong>: ${a.content}</p>
+      ${a.image ? `<img src="${a.image}" alt="Activity image" style="max-width:100%;border-radius:8px;margin-top:0.5rem;">` : ''}
+      <p class="timestamp">${a.timestamp}</p>
+    </div>
+  `).join('');
+}
+function addDandy(event) {
+  event.preventDefault();
+  const username = document.getElementById('dandyUsername').value.trim();
+  const content = document.getElementById('dandyContent').value.trim();
+  const file = document.getElementById('dandyImageFile').files[0];
+  const timestamp = new Date().toLocaleString();
+  if (!username || !content) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dandy = JSON.parse(localStorage.getItem('dandy') || '[]');
+    dandy.unshift({ username, content, image: reader.result || '', timestamp });
+    localStorage.setItem('dandy', JSON.stringify(dandy));
+    document.getElementById('dandyUsername').value = '';
+    document.getElementById('dandyContent').value = '';
+    document.getElementById('dandyImageFile').value = '';
+    renderDandy();
+  };
+  if (file) reader.readAsDataURL(file);
+  else reader.onload();
+}
+function renderDandy() {
+  const dandy = JSON.parse(localStorage.getItem('dandy') || '[]');
+  document.getElementById('dandyList').innerHTML = dandy.map(a => `
+    <div class="activity-post">
+      <p><strong>${a.username}</strong>: ${a.content}</p>
+      ${a.image ? `<img src="${a.image}" alt="Dandy image" style="max-width:100%;border-radius:8px;margin-top:0.5rem;">` : ''}
+      <p class="timestamp">${a.timestamp}</p>
+    </div>
+  `).join('');
+}
+renderPosts();
+renderComments();
+renderActivity();
+renderDandy();
+</script>
+
+</body>
+</html>
