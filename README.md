@@ -1,5 +1,4 @@
-# Purealm
-forfunforfriends
+
 <!DOCTYPE html>
 <html lang="en">
 
