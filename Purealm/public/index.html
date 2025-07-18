@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Firebase SDK (Web, no npm needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Purealm</title>
@@ -97,6 +100,19 @@
     }
   </style>
 </head>
+  <input type="text" id="msgInput" placeholder="Say something...">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+  function sendMessage() {
+    const text = document.getElementById("msgInput").value;
+    db.ref("messages").push().set({
+      message: text,
+      timestamp: Date.now()
+    });
+    document.getElementById("msgInput").value = "";
+  }
+</script>
 <body>
 
 <script>
@@ -302,6 +318,21 @@ renderComments();
 renderActivity();
 renderDandy();
 </script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDSj1x-BGJFu1dWZQD9n7y18cBciJqDRNBU",
+    authDomain: "puralm.firebaseapp.com",
+    databaseURL: "https://puralm.firebaseio.com",
+    projectId: "puralm",
+    storageBucket: "puralm.appspot.com",
+    messagingSenderId: "376497991610",
+    appId: "1:376497991610:web:3f41bd42334021267783",
+    measurementId: "G-54F72KVL87"
+  };
 
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
 </body>
 </html>
